@@ -9,10 +9,10 @@ function woocommerce_wp_select_multiple( $field ) {
     $field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
     $field['value']         = isset( $field['value'] ) ? $field['value'] : ( get_post_meta( $thepostid, $field['id'], true ) ? unserialize(get_post_meta( $thepostid, $field['id'], true )) : array() );
 
-    echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label><select id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" multiple="multiple">';
+    echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><label for="' . esc_attr( $field['id'] ) . '">' .__(wp_kses_post( $field['label'] ), "learndash_pfl") . '</label><select id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" multiple="multiple">';
 
     foreach ( $field['options'] as $key => $value ) {
-        echo '<option value="' . esc_attr( $key ) . '" ' . ( in_array( $key, $field['value'] ) ? 'selected="selected"' : '' ) . '>' . esc_html( $value ) . '</option>';
+        echo '<option value="' . esc_attr( $key ) . '" ' . ( in_array( $key, $field['value'] ) ? 'selected="selected"' : '' ) . '>' . __(esc_html( $value ), "learndash_pfl") . '</option>';
     }
 
     echo '</select> ';
@@ -22,7 +22,7 @@ function woocommerce_wp_select_multiple( $field ) {
         if ( isset( $field['desc_tip'] ) && false !== $field['desc_tip'] ) {
             echo '<img class="help_tip" data-tip="' . esc_attr( $field['description'] ) . '" src="' . esc_url( WC()->plugin_url() ) . '/assets/images/help.png" height="16" width="16" />';
         } else {
-            echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
+            echo '<span class="description">' .__(wp_kses_post($field['description']), "learndash_pfl") . '</span>';
         }
 
     }
@@ -47,7 +47,7 @@ add_filter( 'product_type_selector', 'wcpt_add_lesson_type_type' );
 
 function wcpt_add_lesson_type_type ( $type ) {
 	// Key should be exactly the same as in the class product_type
-	$type[ 'lesson_type' ] = __( 'Lesson' );
+	$type[ 'lesson_type' ] = __( 'Lesson', 'learndash_pfl' );
 	return $type;
 }
 add_filter( 'woocommerce_product_data_tabs', 'lesson_type_tab' );
@@ -55,7 +55,7 @@ add_filter( 'woocommerce_product_data_tabs', 'lesson_type_tab' );
 function lesson_type_tab( $tabs) {
 	// Key should be exactly the same as in the class product_type
 	$tabs['lesson_type'] = array(
-		'label'	 => __( 'Lesson', 'wcpt' ),
+		'label'	 => __( 'Lesson', 'learndash_pfl' ),
 		'target' => 'lesson_type_options',
 		'class'  => ('show_if_lesson_type'),
 	);
@@ -78,27 +78,27 @@ function wcpt_lesson_type_options_product_tab_content() {
 
 			woocommerce_wp_checkbox( array(
 				'id' 	=> '_enable_lesson_type',
-				'label' => __( 'Enable As Lesson Product', 'wcpt' ),
+				'label' => __( 'Enable As Lesson Product', 'learndash_pfl' ),
 			) );
 
 			woocommerce_wp_text_input( array(
 	       		'id'          => '_regular_price',
-	       		'label'       => __( 'Regular price (₨)', 'wcpt' ),
+	       		'label'       => __( 'Regular price (₨)', 'learndash_pfl' ),
 	       		'placeholder' => '',
 	       		'desc_tip'    => 'true',
-	       		'description' => __( 'Enter Lesson Regular Price.', 'wcpt' ),
+	       		'description' => __( 'Enter Lesson Regular Price.', 'learndash_pfl' ),
 	        ));
 	        woocommerce_wp_text_input( array(
 	       		'id'          => '_sale_price',
-	       		'label'       => __( 'Sale price (₨)', 'wcpt' ),
+	       		'label'       => __( 'Sale price (₨)', 'learndash_pfl' ),
 	       		'placeholder' => '',
 	       		'desc_tip'    => 'true',
-	       		'description' => __( 'Enter Lesson Sale Price.', 'wcpt' ),
+	       		'description' => __( 'Enter Lesson Sale Price.', 'learndash_pfl' ),
 	        ));
 
 			woocommerce_wp_checkbox( array(
 				'id' 	=> '_all_lessons',
-				'label' => __( 'All Lessons', 'wcpt' ),
+				'label' => __( 'All Lessons', 'learndash_pfl' ),
 			));
 
 	        $args = array(
@@ -106,13 +106,13 @@ function wcpt_lesson_type_options_product_tab_content() {
 			    'order'    => 'ASC'
 			); 	
 
-			$options[''] = __( 'Select Course', 'woocommerce' );
+			$options[''] = __( 'Select Course', 'learndash_pfl' );
 			$the_query = new WP_Query( $args );
 			if($the_query->have_posts() ) : 
 			    while ( $the_query->have_posts() ) : 
 			       $the_query->the_post();
 			       $id  		=	get_the_ID(); 
-			       $options[$id] = __(get_the_title(), 'woocommerce' );
+			       $options[$id] = __(get_the_title(), 'learndash_pfl' );
 			    endwhile; 
 			    wp_reset_postdata(); 
 			else: 
@@ -122,16 +122,16 @@ function wcpt_lesson_type_options_product_tab_content() {
 
 		    /*woocommerce_wp_select( array( // Text Field type
 		        'id'          => '_course_id',
-		        'label'       => __( 'Lesson', 'woocommerce' ),
-		        'description' => __( 'Attach Lesson.', 'woocommerce' ),
+		        'label'       => __( 'Lesson', 'learndash_pfl' ),
+		        'description' => __( 'Attach Lesson.', 'learndash_pfl' ),
 		        'desc_tip'    => true,
 		        'options'     =>  $options
 		    ));*/
 
 		    woocommerce_wp_select_multiple( array(
 			    'id'          => '_course_id',
-		        'label'       => __( 'Courses', 'woocommerce' ),
-		        'description' => __( 'Attach Courses.', 'woocommerce' ),
+		        'label'       => __( 'Courses', 'learndash_pfl' ),
+		        'description' => __( 'Attach Courses.', 'learndash_pfl' ),
 			    'name' 		  => '_course_id[]',
 			    'class' 	  => 'lesson_form_select',
 			    'options' 	  =>  $options
@@ -143,12 +143,12 @@ function wcpt_lesson_type_options_product_tab_content() {
 
 		    woocommerce_wp_select_multiple( array(
 			    'id'          => '_lesson_id',
-		        'label'       => __( 'Lesson', 'woocommerce' ),
-		        'description' => __( 'Attach Lesson.', 'woocommerce' ),
+		        'label'       => __( 'Lesson', 'learndash_pfl' ),
+		        'description' => __( 'Attach Lesson.', 'learndash_pfl' ),
 			    'name'		  => '_lesson_id[]',
 			    'class' 	  => 'lesson_form_select',
 			    //'options' 	  => $lesson_options
-			    'options'   =>  array('Select Course First')
+			    'options'   =>  array(__("Select Course First", "learndash_pfl"))
 			));
 
 		    echo '</div>';
@@ -290,7 +290,7 @@ function lesson__add_to_content( $content ) {
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
 						      <div class="ld-alert-messages">
-						        '.__( 'This is paid content you need to contact admin regard buy this product.', 'woocommerce' ).'			
+						        '.__( 'This is paid content you need to contact admin regard buy this product.', 'learndash_pfl' ).'			
 						      </div>
 						   </div>
 						</div>';
@@ -306,7 +306,7 @@ function lesson__add_to_content( $content ) {
 		    				$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
-						      <div class="ld-alert-messages">'.__( 'Please buy this lessson', 'woocommerce' ).' <a href="'.$permalink.'" target="_blank">'.__( 'Buy Now', 'woocommerce' ).'</a>			
+						      <div class="ld-alert-messages">'.__( 'Please buy this lessson', 'learndash_pfl' ).' <a href="'.$permalink.'" target="_blank">'.__( 'Buy Now', 'learndash_pfl' ).'</a>			
 						      </div>
 						   </div>
 						</div>';
@@ -318,13 +318,13 @@ function lesson__add_to_content( $content ) {
 		    				{
 			    				$my_id = $val22;
 			    				$permalink = get_permalink($my_id);
-			    				$products .= ' <a href="'.$permalink.'"  target="_blank">'.get_the_title($my_id).'</a>  &nbsp;';
+			    				$products .= ' <a href="'.$permalink.'"  target="_blank">'.__(get_the_title($my_id), "learndash_pfl").'</a>  &nbsp;';
 		    				}
 
 		    				$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
-						      <div class="ld-alert-messages">'.__( 'To buy this lesson buy following any product.', 'woocommerce' ).' &nbsp;'.$products.'
+						      <div class="ld-alert-messages">'.__( 'To buy this lesson buy following any product.', 'learndash_pfl' ).' &nbsp;'.$products.'
 						      </div>
 						   </div>
 						</div>';
@@ -368,8 +368,8 @@ function lesson__add_to_content( $content ) {
 													   <div class="ld-alert-content">
 													      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
 													      <div class="ld-alert-messages">
-													      '.__( 'Plz buy previous lessons first. You are redirecting to', 'woocommerce' ).'
-													       "'.get_the_title($page_data[0]).'" page.
+													      '.__( 'Plz buy previous lessons first. You are redirecting to', 'learndash_pfl' ).'
+													       "'.__(get_the_title($page_data[0]), "learndash_pfl").'" page.
 													      </div>
 													   </div>
 													</div>
@@ -407,7 +407,7 @@ function lesson__add_to_content( $content ) {
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
 						      <div class="ld-alert-messages">
-						      	'.__( 'This is paid content you need to contact admin regard buy this product.', 'woocommerce' ).'
+						      	'.__( 'This is paid content you need to contact admin regard buy this product.', 'learndash_pfl' ).'
 						      </div>
 						   </div>
 						</div>';
@@ -419,7 +419,7 @@ function lesson__add_to_content( $content ) {
 	    				$content = '<div class="ld-alert ld-alert-warning">
 							   <div class="ld-alert-content">
 							      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
-							      <div class="ld-alert-messages">'.__( 'Please buy this lessson', 'woocommerce' ).' <a href="'.$permalink.'" target="_blank">'.__( 'Buy Now', 'woocommerce' ).'</a>			
+							      <div class="ld-alert-messages">'.__( 'Please buy this lessson', 'learndash_pfl' ).' <a href="'.$permalink.'" target="_blank">'.__( 'Buy Now', 'learndash_pfl' ).'</a>			
 							      </div>
 							   </div>
 							</div>';
@@ -432,8 +432,8 @@ function lesson__add_to_content( $content ) {
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
 						      <div class="ld-alert-messages">
-						        Please <a href="'.$return_url.'" target="_blank">'.__( 'login', 'woocommerce' ).'</a>
-						        '.__( 'first to access this content.', 'woocommerce' ).'
+						        Please <a href="'.$return_url.'" target="_blank">'.__( 'login', 'learndash_pfl' ).'</a>
+						        '.__( 'first to access this content.', 'learndash_pfl' ).'
 						      </div>
 						   </div>
 						</div>';
