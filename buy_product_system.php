@@ -46,8 +46,7 @@ function lesson_product_add_on_display_cart($data, $cart_item)
         foreach ($valur_ar as $value) {
             $lesson_data = get_post($value);
             $content .=
-                "<tr><td style='padding:5px'>" .
-                $lesson_data->post_title .
+                "<tr><td style='padding:5px'>" .__($lesson_data->post_title, "learndash_pfl").
                 "</td></tr>";
         }
         $content .= "</table>";
@@ -78,8 +77,6 @@ function lesson_product_add_on_order_item_meta($item_id, $values)
         );
     }
 }
-
-
 
 add_filter(
     "woocommerce_email_order_meta_fields",
@@ -145,9 +142,6 @@ add_action('woocommerce_checkout_update_order_meta',function( $order_id, $posted
     }
 
 } , 10, 2);
-
-
-
 
 
 ?>

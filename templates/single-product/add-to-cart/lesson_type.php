@@ -14,7 +14,7 @@ do_action( 'lesson_type_before_add_to_cart_form' );  ?>
 	    $lesson_ar =   unserialize(get_post_meta($id ,'_lesson_id',true) );
 	    //print_r($lesson_ar);
 	?>
-	<h4>Lessons to buy</h4>
+	<h4><?php _e("Lessons to buy", "learndash_pfl"); ?></h4>
 	<table border="1">
 		<?php
 		foreach($lesson_ar as $lesson) {
@@ -22,14 +22,14 @@ do_action( 'lesson_type_before_add_to_cart_form' );  ?>
 			?>
 		<tr>
 			<!-- <td><?php echo $lesson; ?></td> -->
-			<td style="padding:5px"><?php echo $lesson_data->post_title; ?></td>
+			<td style="padding:5px"><?php _e($lesson_data->post_title, "learndash_pfl"); ?></td>
 		</tr>
 			<?php
 		}
 		?>
 	</table>
 
-	<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+	<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button alt"><?php _e(esc_html($product->single_add_to_cart_text()), "learndash_pfl"); ?></button>
 </form>
 
 <?php do_action( 'lesson_type_after_add_to_cart_form' ); ?>

@@ -5,7 +5,7 @@
 * Description: Lesson Buy is custom plugin to work with learn dash
 * Author: Faizan Gill
 * Version: 1.0.6
-* Text Domain: woocommerce
+* Text Domain: learndash_pfl
 * Domain Path: /languages
 * Author URI: https://oxygensoft.net/
 */
@@ -86,13 +86,13 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 			
 		}
 		$options = '';
-		$options .= '<option value="">Select lesson</option>';
+		$options .= '<option value="">'.__("Select lesson", "learndash_pfl").'</option>';
 		$the_query = new WP_Query( $args );
 		if($the_query->have_posts() ) : 
 		    while ( $the_query->have_posts() ) : 
 		       $the_query->the_post();
 		       $id  	 =	get_the_ID();
-		       $options .= '<option value="'.$id.'" '.(count($lesson_idss) > 0 && in_array( $id, $lesson_idss ) ? "selected" : "" ).'>'.get_the_title().'</option>';
+		       $options .= '<option value="'.$id.'" '.(count($lesson_idss) > 0 && in_array( $id, $lesson_idss ) ? "selected" : "" ).'>'.__(get_the_title(), "learndash_pfl").'</option>';
 		    endwhile; 
 		    wp_reset_postdata(); 
 		else: 
@@ -144,9 +144,8 @@ else
 	    global $pagenow;
 	    
          echo '<div class="notice notice-warning is-dismissible">
-	             <p>Buy lesson plugin required woocommerce plugin to activate</p>
+	             <p>'.__("Buy lesson plugin required woocommerce plugin to activate", "learndash_pfl").'</p>
 	           </div>';
-	   
 	}
 	add_action('admin_notices', 'general_admin_notice');
 }

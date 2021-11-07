@@ -21,7 +21,7 @@ jQuery(document).ready(function (){
 				}
 				s++;
 			});
-			alert('You cannot Unselect Lesson when All lesson is selected');
+			alert('<?php _e("You cannot Unselect Lesson when All lesson is selected", "learndash_pfl"); ?>');
 		}
 	});
 });
