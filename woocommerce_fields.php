@@ -9,10 +9,10 @@ function woocommerce_wp_select_multiple( $field ) {
     $field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
     $field['value']         = isset( $field['value'] ) ? $field['value'] : ( get_post_meta( $thepostid, $field['id'], true ) ? unserialize(get_post_meta( $thepostid, $field['id'], true )) : array() );
 
-    echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><label for="' . esc_attr( $field['id'] ) . '">' .__(wp_kses_post( $field['label'] ), "learndash_pfl") . '</label><select id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" multiple="multiple">';
+    echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><label for="' . esc_attr( $field['id'] ) . '">' .__(wp_kses_post( $field['label'] ), "learndash_pfl" ) . '</label><select id="' . esc_attr( $field['id'] ) . '" name="' . esc_attr( $field['name'] ) . '" class="' . esc_attr( $field['class'] ) . '" multiple="multiple">';
 
     foreach ( $field['options'] as $key => $value ) {
-        echo '<option value="' . esc_attr( $key ) . '" ' . ( in_array( $key, $field['value'] ) ? 'selected="selected"' : '' ) . '>' . __(esc_html( $value ), "learndash_pfl") . '</option>';
+        echo '<option value="' . esc_attr( $key ) . '" ' . ( in_array( $key, $field['value'] ) ? 'selected="selected"' : '' ) . '>' . __( esc_html( $value ), "learndash_pfl" ) . '</option>';
     }
 
     echo '</select> ';
@@ -22,7 +22,7 @@ function woocommerce_wp_select_multiple( $field ) {
         if ( isset( $field['desc_tip'] ) && false !== $field['desc_tip'] ) {
             echo '<img class="help_tip" data-tip="' . esc_attr( $field['description'] ) . '" src="' . esc_url( WC()->plugin_url() ) . '/assets/images/help.png" height="16" width="16" />';
         } else {
-            echo '<span class="description">' .__(wp_kses_post($field['description']), "learndash_pfl") . '</span>';
+            echo '<span class="description">' .__( wp_kses_post( $field['description'] ), "learndash_pfl" ) . '</span>';
         }
 
     }
@@ -30,7 +30,6 @@ function woocommerce_wp_select_multiple( $field ) {
 }
 
 add_action( 'plugins_loaded', 'wcpt_register_lesson_type' );
-
 function wcpt_register_lesson_type () {
 
 	class WC_Product_Lesson_Type extends WC_Product {
@@ -44,14 +43,13 @@ function wcpt_register_lesson_type () {
 }
 
 add_filter( 'product_type_selector', 'wcpt_add_lesson_type_type' );
-
 function wcpt_add_lesson_type_type ( $type ) {
 	// Key should be exactly the same as in the class product_type
 	$type[ 'lesson_type' ] = __( 'Lesson', 'learndash_pfl' );
 	return $type;
 }
-add_filter( 'woocommerce_product_data_tabs', 'lesson_type_tab' );
 
+add_filter( 'woocommerce_product_data_tabs', 'lesson_type_tab' );
 function lesson_type_tab( $tabs) {
 	// Key should be exactly the same as in the class product_type
 	$tabs['lesson_type'] = array(
@@ -64,7 +62,6 @@ function lesson_type_tab( $tabs) {
 
 
 add_action( 'woocommerce_product_data_panels', 'wcpt_lesson_type_options_product_tab_content' );
-
 function wcpt_lesson_type_options_product_tab_content() {
 	// Dont forget to change the id in the div with your target of your product tab
 	
@@ -74,7 +71,7 @@ function wcpt_lesson_type_options_product_tab_content() {
 		<div class='options_group'>
 
 		<?php
-			include_once("script_for_ajax_dropdown.php");
+			include_once( "script_for_ajax_dropdown.php" );
 
 			woocommerce_wp_checkbox( array(
 				'id' 	=> '_enable_lesson_type',
@@ -108,11 +105,11 @@ function wcpt_lesson_type_options_product_tab_content() {
 
 			$options[''] = __( 'Select Course', 'learndash_pfl' );
 			$the_query = new WP_Query( $args );
-			if($the_query->have_posts() ) : 
+			if( $the_query->have_posts() ) : 
 			    while ( $the_query->have_posts() ) : 
 			       $the_query->the_post();
 			       $id  		=	get_the_ID(); 
-			       $options[$id] = __(get_the_title(), 'learndash_pfl' );
+			       $options[$id] = __( get_the_title(), 'learndash_pfl' );
 			    endwhile; 
 			    wp_reset_postdata(); 
 			else: 
@@ -148,7 +145,7 @@ function wcpt_lesson_type_options_product_tab_content() {
 			    'name'		  => '_lesson_id[]',
 			    'class' 	  => 'lesson_form_select',
 			    //'options' 	  => $lesson_options
-			    'options'   =>  array(__("Select Course First", "learndash_pfl"))
+			    'options'   =>  array( __( "Select Course First", "learndash_pfl" ) )
 			));
 
 		    echo '</div>';
@@ -157,33 +154,32 @@ function wcpt_lesson_type_options_product_tab_content() {
 	</div><?php
 }
 
-function set_product_id($lesson_id,$post_id)
+function set_product_id( $lesson_id, $post_id )
 {
     $product_ids   = get_post_meta(
                     $lesson_id,
                     "product_ids",
-                    true);
+                    true );
 
-    $product_ids   = unserialize($product_ids);   
+    $product_ids   = unserialize( $product_ids );   
 
-    if(!is_array($product_ids))
+    if( ! is_array( $product_ids ) )
     {
         $product_ids = array();    
     }
     $product_ids[] =   $post_id;
 
-    $product_ids   =   array_unique(array_merge($product_ids, $product_ids) );
+    $product_ids   =   array_unique( array_merge( $product_ids, $product_ids ) );
 
     update_post_meta(
                     $lesson_id,"product_ids",
-                    maybe_serialize($product_ids)
+                    maybe_serialize( $product_ids )
                     );
 }
 
 
 
 add_action( 'woocommerce_process_product_meta', 'save_lesson_type_options_field' );
-
 function save_lesson_type_options_field( $post_id ) {
 
 	$enable_lesson_type = isset( $_POST['_enable_lesson_type'] ) ? 'yes' : 'no';
@@ -194,21 +190,21 @@ function save_lesson_type_options_field( $post_id ) {
 	endif;
 
 	if ( isset( $_POST['_sale_price'] ) ) :
-		update_post_meta($post_id,'_sale_price',sanitize_text_field($_POST['_sale_price']));
+		update_post_meta( $post_id, '_sale_price', sanitize_text_field( $_POST['_sale_price'] ) );
 	endif;
 
 	if ( isset( $_POST['_course_id'] ) ) :
-		update_post_meta($post_id,'_course_id',maybe_serialize($_POST['_course_id']));
+		update_post_meta( $post_id, '_course_id', maybe_serialize( $_POST['_course_id'] ) );
 	endif;
 
 	if ( isset( $_POST['_lesson_id'] ) ) :
-		update_post_meta($post_id,'_lesson_id',maybe_serialize($_POST['_lesson_id']));
+		update_post_meta( $post_id, '_lesson_id', maybe_serialize( $_POST['_lesson_id'] ) );
 		
-		update_post_meta("60", "product_id", "27");
+		update_post_meta( "60", "product_id", "27" );
 
-		foreach($_POST['_lesson_id'] as $lesson_id) {
-			set_product_id($lesson_id, $post_id);
-			update_post_meta($lesson_id, "_ld_lesson_active", "1");
+		foreach( $_POST['_lesson_id'] as $lesson_id ) {
+			set_product_id( $lesson_id, $post_id );
+			update_post_meta( $lesson_id, "_ld_lesson_active", "1" );
 		}
 	endif;
 }
@@ -233,20 +229,20 @@ function save_lesson_type_options_field( $post_id ) {
 } // function student_post_redirect
 add_action('template_redirect', 'student_post_redirect');*/
 
-function first_lesson_fn($lesson_id) 
+function first_lesson_fn( $lesson_id ) 
 {
 	$first_lesson = false;
-	$courses = get_post_meta($lesson_id,'course_id');
-	if (!empty($courses)) 
+	$courses = get_post_meta( $lesson_id, 'course_id' );
+	if ( ! empty( $courses ) ) 
 	{
-    	if(is_array($courses) && count($courses) > 0)
+    	if( is_array( $courses ) && count( $courses ) > 0 )
 		{
 			$course_id = $courses[0];
-			$course_meta = get_post_meta($course_id,'ld_course_steps',true);
-			$lesson_ar = (isset($course_meta['steps']['h']['sfwd-lessons']) ? $course_meta['steps']['h']['sfwd-lessons'] : array());
-			if (isset($lesson_ar) && is_array($lesson_ar) && count($lesson_ar) > 0 ) 
+			$course_meta = get_post_meta( $course_id, 'ld_course_steps', true) ;
+			$lesson_ar = ( isset( $course_meta['steps']['h']['sfwd-lessons'] ) ? $course_meta['steps']['h']['sfwd-lessons'] : array() );
+			if ( isset( $lesson_ar ) && is_array( $lesson_ar ) && count( $lesson_ar ) > 0 ) 
 			{
-				if (array_key_first($lesson_ar) == $lesson_id) {
+				if ( array_key_first( $lesson_ar ) == $lesson_id ) {
 					$first_lesson = true;
 				}
 			}
@@ -255,6 +251,7 @@ function first_lesson_fn($lesson_id)
 	return $first_lesson;
 }
 
+add_filter( 'the_content', 'lesson__add_to_content' );
 function lesson__add_to_content( $content ) {
 
 	global $post;
@@ -262,11 +259,11 @@ function lesson__add_to_content( $content ) {
     if( is_single() && 'sfwd-lessons' === $post->post_type  ) {
     	$my_id = get_the_ID();
 
-    	$ld_lesson_active = get_post_meta($my_id, '_ld_lesson_active',true);
+    	$ld_lesson_active = get_post_meta( $my_id, '_ld_lesson_active', true );
     	if($ld_lesson_active=="1")
     	{
-			$product_ids   = get_post_meta($my_id, "product_ids", true);
-			$product_ids   = unserialize($product_ids);
+			$product_ids   = get_post_meta( $my_id, "product_ids", true );
+			$product_ids   = unserialize( $product_ids );
 
     		if(is_user_logged_in())
     		{
@@ -275,16 +272,16 @@ function lesson__add_to_content( $content ) {
 
     			$temp_user = get_session();
 
-    			$post_meta = get_post_meta($my_id,'access_user_id',true);
+    			$post_meta = get_post_meta( $my_id, 'access_user_id', true );
 
-				$post_meta = @unserialize($post_meta);
+				$post_meta = @unserialize( $post_meta );
 	
-				if(@in_array($temp_user,$post_meta))
+				if( @in_array( $temp_user, $post_meta ) )
 	    		{
-	    			set_lesson_access(array($my_id),$user_id);
+	    			set_lesson_access( array( $my_id ), $user_id );
 		    	}	
 	    		
-	    		if (empty($product_ids)) 
+	    		if ( empty( $product_ids ) ) 
 	    		{
 		    		$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
@@ -295,13 +292,13 @@ function lesson__add_to_content( $content ) {
 						   </div>
 						</div>';
 	    		} else {
-					$post_meta = get_post_meta($my_id, 'access_user_id',true);
-					$post_meta = @unserialize($post_meta);
-					if(!is_array($post_meta) || !in_array($user_id,$post_meta))
+					$post_meta = get_post_meta( $my_id, 'access_user_id', true );
+					$post_meta = @unserialize( $post_meta );
+					if(!is_array( $post_meta ) || !in_array( $user_id, $post_meta ) )
 		    		{
-		    			if (count($product_ids) == 1) {
+		    			if ( count( $product_ids ) == 1 ) {
 		    				$my_id = $product_ids[0];
-		    				$permalink = get_permalink($my_id);
+		    				$permalink = get_permalink( $my_id );
 		    				//$content = 'Please buy this lessson <a href="'.$permalink.'" target="_blank">now</a>';
 		    				$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
@@ -314,11 +311,11 @@ function lesson__add_to_content( $content ) {
 		    			else
 		    			{
 		    				$products = '';
-		    				foreach($product_ids as $val22)
+		    				foreach( $product_ids as $val22 )
 		    				{
 			    				$my_id = $val22;
-			    				$permalink = get_permalink($my_id);
-			    				$products .= ' <a href="'.$permalink.'"  target="_blank">'.__(get_the_title($my_id), "learndash_pfl").'</a>  &nbsp;';
+			    				$permalink = get_permalink( $my_id );
+			    				$products .= ' <a href="'.$permalink.'"  target="_blank">'.__( get_the_title( $my_id ), "learndash_pfl" ).'</a>  &nbsp;';
 		    				}
 
 		    				$content = '<div class="ld-alert ld-alert-warning">
@@ -332,44 +329,44 @@ function lesson__add_to_content( $content ) {
 		    		}
 		    		else 
 		    		{
-			    		$courses = get_post_meta($my_id,'course_id');
-				    	if (!empty($courses)) 
+			    		$courses = get_post_meta( $my_id, 'course_id' );
+				    	if ( ! empty( $courses ) ) 
 				    	{
-					    	if(is_array($courses) && count($courses) > 0)
+					    	if( is_array( $courses ) && count( $courses ) > 0 )
 				    		{
 				    			$course_id = $courses[0];
-				    			$course_meta = get_post_meta($course_id,'ld_course_steps',true);
-				    			$lesson_ar = (isset($course_meta['steps']['h']['sfwd-lessons']) ? $course_meta['steps']['h']['sfwd-lessons'] : array());
+				    			$course_meta = get_post_meta( $course_id, 'ld_course_steps', true );
+				    			$lesson_ar = ( isset( $course_meta['steps']['h']['sfwd-lessons'] ) ? $course_meta['steps']['h']['sfwd-lessons'] : array() );
 
-				    			if (isset($lesson_ar) && is_array($lesson_ar) && count($lesson_ar) > 0 ) 
+				    			if ( isset( $lesson_ar ) && is_array( $lesson_ar ) && count( $lesson_ar ) > 0 ) 
 				    			{
 			    					$page_data = array();
-				    				foreach ($lesson_ar as $key => $value) 
+				    				foreach ( $lesson_ar as $key => $value ) 
 				    				{
-				    					$posts_meta	= get_post_meta($key, 'access_user_id',true);
-										$posts_meta	= unserialize($posts_meta);
+				    					$posts_meta	= get_post_meta( $key, 'access_user_id', true );
+										$posts_meta	= unserialize( $posts_meta );
 										
-										if(!is_array($posts_meta) || !in_array($user_id,$posts_meta))
+										if( ! is_array( $posts_meta ) || !in_array( $user_id, $posts_meta ) )
 		    							{
-		    								$ld_lesson_active = get_post_meta($key, '_ld_lesson_active',true);
-									    	if($ld_lesson_active=="1")
+		    								$ld_lesson_active = get_post_meta( $key, '_ld_lesson_active', true );
+									    	if( $ld_lesson_active == "1" )
 									    	{
 	    										$page_data[] = $key;
 									    	}
 		    							} 
-		    							else if ($key == $my_id) {
+		    							else if ( $key == $my_id ) {
 		    								break;
 		    							}
 				    				}
-				    				if (count($page_data) > 0) {
-				    					$permalink = get_permalink($page_data[0]);
+				    				if ( count( $page_data ) > 0 ) {
+				    					$permalink = get_permalink( $page_data[0] );
 
 					    				$content = '<div class="ld-alert ld-alert-warning">
 													   <div class="ld-alert-content">
 													      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
 													      <div class="ld-alert-messages">
 													      '.__( 'Plz buy previous lessons first. You are redirecting to', 'learndash_pfl' ).'
-													       "'.__(get_the_title($page_data[0]), "learndash_pfl").'" page.
+													       "'.__( get_the_title( $page_data[0] ), "learndash_pfl" ).'" page.
 													      </div>
 													   </div>
 													</div>
@@ -390,18 +387,18 @@ function lesson__add_to_content( $content ) {
 
     			$temp_user = get_session();
 
-    			$post_meta = get_post_meta($my_id,'access_user_id',true);
+    			$post_meta = get_post_meta( $my_id, 'access_user_id', true );
 
-				$post_meta = @unserialize($post_meta);
+				$post_meta = @unserialize( $post_meta );
 				
-				if(@in_array($temp_user,$post_meta)) {
+				if(@in_array( $temp_user, $post_meta ) ) {
 		    	}
     			
-    			else if(first_lesson_fn($my_id))
+    			else if( first_lesson_fn( $my_id ) )
     			{
-    				$product_ids   = get_post_meta($my_id, "product_ids", true);
-		    		$product_ids   = unserialize($product_ids);
-		    		if (empty($product_ids))
+    				$product_ids   = get_post_meta( $my_id, "product_ids", true );
+		    		$product_ids   = unserialize( $product_ids );
+		    		if ( empty( $product_ids ) )
 		    		{
 		    			$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
@@ -414,7 +411,7 @@ function lesson__add_to_content( $content ) {
 		    		} 
 		    		else {
 						$my_id = $product_ids[0];
-	    				$permalink = get_permalink($my_id);
+	    				$permalink = get_permalink( $my_id );
 	    				//$content = 'Please buy this lessson <a href="'.$permalink.'" target="_blank">now</a>';
 	    				$content = '<div class="ld-alert ld-alert-warning">
 							   <div class="ld-alert-content">
@@ -445,6 +442,6 @@ function lesson__add_to_content( $content ) {
 
     return $content;
 }
-add_filter('the_content', 'lesson__add_to_content');
+
 
 ?>

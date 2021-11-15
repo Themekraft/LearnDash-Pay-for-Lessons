@@ -15,17 +15,17 @@ do_action( 'lesson_type_before_add_to_cart_form' );  ?>
 	    //print_r($lesson_ar);
 	?>
 	<h4><?php _e("Lessons to buy", "learndash_pfl"); ?></h4>
-	<table border="1">
+	<table style="border:1px;">
 		<?php
-		foreach($lesson_ar as $lesson) {
-			$lesson_data = get_post($lesson);
-			?>
+			foreach( $lesson_ar as $lesson ) {
+				$lesson_data = get_post( $lesson );
+		?>
 		<tr>
 			<!-- <td><?php echo $lesson; ?></td> -->
-			<td style="padding:5px"><?php _e($lesson_data->post_title, "learndash_pfl"); ?></td>
+			<td style="padding:5px"><?php _e( $lesson_data->post_title, "learndash_pfl" ); ?></td>
 		</tr>
-			<?php
-		}
+		<?php
+			}
 		?>
 	</table>
 
