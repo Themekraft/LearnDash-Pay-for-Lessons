@@ -10,6 +10,59 @@
 * Author URI: https://oxygensoft.net/
 */
 
+$my_updated_flag = 0;
+function action_updated_post_meta( $meta_id, $post_id, $meta_key, $meta_value = '' )
+{
+    global $post, $my_updated_flag;
+
+    if ($my_updated_flag == 1) {
+        $id='';
+        if($post->post_type =="sfwd-lessons")
+        {
+
+	        if ($post->post_status == 'publish') {
+	        	$id = $post->ID;
+	        } else {
+	        	$id = $post->ID;
+	        }
+	        $title = $post->post_title;
+
+
+	        $args = array(  
+		        'post_type' => 'sfwd-lessons',
+		        'post_status' => 'publish',
+		        'posts_per_page' => -1, 
+		    );
+
+		    $loop = new WP_Query( $args ); 
+		        
+		    while ( $loop->have_posts() ) : $loop->the_post(); 
+		        
+		        $id    = $post->ID ;
+
+		        $title = $post->post_title ;
+
+		        if (function_exists ( 'icl_register_string' )){
+					icl_register_string('learndash_pfl', 'lesson_title_'.$id, $title);
+				}
+
+		    endwhile;
+
+		    wp_reset_postdata();
+		}
+
+        $my_updated_flag = 0;
+    }
+};
+add_action( 'updated_post_meta', 'action_updated_post_meta', 10, 4 );
+
+function action_post_updated( $array, $int, $int2 ) {
+    global $my_updated_flag;
+    $my_updated_flag = 1;
+};
+add_action( 'post_updated', 'action_post_updated', 10, 3 );
+
+
 
 if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins'))) )
 {
