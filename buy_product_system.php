@@ -44,9 +44,14 @@ function lesson_product_add_on_display_cart($data, $cart_item)
         $valur_ar = explode(",", $cart_item["lesson_to_buy"]);
         $content = '<table border="1">';
         foreach ($valur_ar as $value) {
-            $lesson_data = get_post($value);
-            $content .=
-                "<tr><td style='padding:5px'>" .__($lesson_data->post_title, "learndash_pfl").
+            $lesson_data  = get_post($value);
+            $id           = $lesson_data->ID;
+            $post_title   = $lesson_data->post_title;
+           
+            $lesson_title = apply_filters('wpml_translate_single_string', $post_title, 'learndash_pfl', 'lesson_title_'.$id );
+       
+            
+            $content .=  '<tr><td style="padding:5px" lessson_id="'.$id.'"> '.$lesson_title.
                 "</td></tr>";
         }
         $content .= "</table>";
