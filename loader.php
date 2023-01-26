@@ -51,28 +51,18 @@ if ( ! function_exists( 'dpflww_fs' ) ) {
 	die;
 }
 
-if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins') ) ) && dpflww_fs()->is_paying() )
-{
+if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins') ) ) && dpflww_fs()->is_paying() ) {
 
-	function set_lesson_access($lesson_ids_ar, $user_id)
-	{
-	    foreach ($lesson_ids_ar as $lesson_id) {
+	function set_lesson_access( $lesson_ids_ar, $user_id ) {
+	    foreach ( $lesson_ids_ar as $lesson_id ) {
 	        $user_ids = get_post_meta($lesson_id, "access_user_id", true);
-
-	        $user_ids = unserialize($user_ids);
-
-	        if (!is_array($user_ids)) {
+	        $user_ids = unserialize( $user_ids );
+	        if ( ! is_array( $user_ids ) ) {
 	            $user_ids = [];
 	        }
 	        $user_ids[] = $user_id;
-
 	        $user_ids = array_unique(array_merge($user_ids, $user_ids));
-
-	        update_post_meta(
-	            $lesson_id,
-	            "access_user_id",
-	            maybe_serialize($user_ids)
-	        );
+	        update_post_meta( $lesson_id, "access_user_id", maybe_serialize( $user_ids ) );
 	    }
 	}
 
@@ -82,8 +72,9 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 	include_once 'includes/product-integration.php';
 
 
-	function get_course_lessons()
-	{
+	add_action('wp_ajax_nopriv_get_course_lessons', 'get_course_lessons');
+	add_action('wp_ajax_get_course_lessons', 'get_course_lessons');
+	function get_course_lessons() {
 		$courses = isset( $_REQUEST['courses'] ) ? $_REQUEST['courses'] : '';
 	    $args = array(
 			'posts_per_page' => '-1',
@@ -99,67 +90,51 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 	    	),
 		); 
 		$lesson_idss = array();
-		if (isset($_REQUEST['productID']) && $_REQUEST['productID'] != '') 
-		{
-			$lesson_idss = unserialize(get_post_meta( $_REQUEST['productID'], '_lesson_id' , true));
+		if ( isset( $_REQUEST['productID']) && $_REQUEST['productID'] != '' ) {
+			$lesson_idss = unserialize( get_post_meta( $_REQUEST['productID'], '_lesson_id' , true ) );
 			
 		}
 		$options = '';
 		$options .= '<option value="">'.__("Select lesson", "learndash_pfl").'</option>';
 		$the_query = new WP_Query( $args );
-		if($the_query->have_posts() ) : 
+		if( $the_query->have_posts() ) : 
 		    while ( $the_query->have_posts() ) : 
 		       $the_query->the_post();
 		       $id  	 =	get_the_ID();
-		       $options .= '<option value="'.$id.'" '.(count($lesson_idss) > 0 && in_array( $id, $lesson_idss ) ? "selected" : "" ).'>'.__(get_the_title(), "learndash_pfl").'</option>';
+		       $options .= '<option value="'.$id.'" '.( count( $lesson_idss ) > 0 && in_array( $id, $lesson_idss ) ? "selected" : "" ).'>'.__( get_the_title(), "learndash_pfl" ).'</option>';
 		    endwhile; 
 		    wp_reset_postdata(); 
-		else: 
 		endif;
-
-		
 		echo $options;
 		die();
 	}
 
-	add_action('wp_ajax_nopriv_get_course_lessons', 'get_course_lessons');
-	add_action('wp_ajax_get_course_lessons', 'get_course_lessons');
-
-
-
-	function enqueue_select2_jquery() {
-	    wp_register_style( 'select2css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css', false, '1.0', 'all' );
-	    wp_register_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.js', array( 'jquery' ), '1.0', true );
-	    wp_enqueue_style( 'select2css' );
-	    wp_enqueue_script( 'select2' );
-	}
 	add_action( 'admin_enqueue_scripts', 'enqueue_select2_jquery' );
-
-	function select2jquery_inline() {
-	    ?>
-		<style type="text/css">
-		.select2-container {margin: 0 2px 0 2px;}
-		.tablenav.top #doaction, #doaction2, #post-query-submit {margin: 0px 4px 0 4px;}
-		</style>        
-		<script type='text/javascript'>
-		jQuery(document).ready(function ($) {
-		   jQuery(".select2").select2(); 
-		   jQuery( document.body ).on( "click", function() {
-		        jQuery("select").select2(); 
-		     });
-		});
-		</script>   
-	    <?php
+	function enqueue_select2_jquery() {
+        global $post, $pagenow;
+        if ( $pagenow == 'post-new.php' || $pagenow == 'post.php' ) {
+            if ( 'product' === $post->post_type ) {     
+                wp_register_style( 'select2css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css', false, '1.0', 'all' );
+                wp_register_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.js', array( 'jquery' ), '1.0', true );
+                wp_enqueue_style( 'select2css' );
+                wp_enqueue_script( 'select2' );
+            }
+        }
 	}
-	add_action( 'admin_head', 'select2jquery_inline' );
-
-}
-else
-{
 	
-	function general_admin_notice(){
-	    global $pagenow;
-	    
+	add_action( 'admin_head', 'select2jquery_inline' );
+	function select2jquery_inline() {
+		global $post,$pagenow;
+        if ( $pagenow == 'post-new.php' || $pagenow == 'post.php' ) {
+            if ( 'product' === $post->post_type ) {     
+                echo '<style type="text/css">.select2-container {margin: 0 2px 0 2px;}.tablenav.top #doaction, #doaction2, #post-query-submit {margin: 0px 4px 0 4px;}</style>';
+                echo '<script type="text/javascript">jQuery(document).ready(function($){jQuery(".select2").select2();jQuery(document.body).on("click",function(){jQuery("select").select2();});});</script>';
+            }
+        }
+	}
+} else {
+	
+	function general_admin_notice() {
          echo '<div class="notice notice-warning is-dismissible">
 	             <p>'.__("Buy lesson plugin required woocommerce plugin to activate", "learndash_pfl").'</p>
 	           </div>';

@@ -1,7 +1,7 @@
 <?php
 
+add_action( 'add_meta_boxes', 'learndash_lesson_meta_box' );
 function learndash_lesson_meta_box() {
- 
 	if( dpflww_fs()->is_paying() ){
 		add_meta_box(
 			'learndash_lesson',
@@ -12,17 +12,13 @@ function learndash_lesson_meta_box() {
 	}
 }
 
-add_action( 'add_meta_boxes', 'learndash_lesson_meta_box' );
-
-
 function learndash_lesson_meta_box_callback( $post ) {
-
     wp_nonce_field( 'learndash_lesson_nonce', 'learndash_lesson_nonce' );
     $checked ='';
-
-
     $active = get_post_meta( $post->ID, '_ld_lesson_active', true );
-    if($active=="1"){$checked ='checked';}
+    if( $active == "1" ){
+		$checked ='checked';
+	}
     
     ?>
     <div id="_ld_lesson_price" class="sfwd_input sfwd_input_type_checkbox ">
@@ -74,21 +70,17 @@ function learndash_lesson_meta_box_callback( $post ) {
 	   <span class="sfwd_option_input">
 	      <div class="sfwd_option_div">
 	        <?php
-		        $product_ids   = get_post_meta(get_the_ID(), "product_ids", true);
-	    		$product_ids   = unserialize($product_ids);
+		        $product_ids   = get_post_meta( get_the_ID(), "product_ids", true );
+	    		$product_ids   = unserialize( $product_ids );
 	    		$content	   = '';
-	    		if (empty($product_ids)) 
-	    		{
-		    		$content = __("No Product Attached", "learndash_pfl");	
+	    		if ( empty( $product_ids ) ) {
+		    		$content = __( "No Product Attached", "learndash_pfl" );	
 	    		} 
-	    		else 
-	    		{
-    				foreach($product_ids as $val22)
-    				{
-	    				$my_id = $val22;
-	    				$permalink = get_permalink($my_id);
-	    				$content .= ' <a href="'.$permalink.'"  target="_blank">'.__(get_the_title($my_id), "learndash_pfl").'</a> <br>';
-	    				//$content .= get_the_title($my_id).'<br>';
+	    		else {
+    				foreach( $product_ids as $attached_product ) {
+	    				$product_id = $attached_product;
+	    				$permalink = get_permalink( $product_id );
+	    				$content .= ' <a href="'.$permalink.'"  target="_blank">'.__( get_the_title( $product_id ), "learndash_pfl").'</a> <br>';
     				}
 	    		}
 	    		echo $content;
@@ -112,14 +104,11 @@ function learndash_lesson_meta_box_callback( $post ) {
 	   <span class="sfwd_option_input">
 	      <div class="sfwd_option_div">
 		    <?php
-		    $users       = get_users( array( 'fields' => 'all' ) );
-			$access_user = get_post_meta(get_the_ID(),"access_user_id",true);
-			
+		    $users         = get_users( array( 'fields' => 'all' ) );
+			$access_user   = get_post_meta( get_the_ID(), "access_user_id", true );
+			$access_user   = unserialize( $access_user );
 
-			$access_user   = unserialize($access_user);
-
-			if(!is_array($access_user))
-		    {
+			if( ! is_array( $access_user ) ) {
 		        $access_user = array();    
 		    }
 		   
@@ -131,23 +120,17 @@ function learndash_lesson_meta_box_callback( $post ) {
 	                   
 	                    $ID = $user_id->data->ID;
 	                    $selected='';
-	                    if(in_array($ID,$access_user))
-	                    {
+	                    if( in_array( $ID, $access_user ) ) {
 	                    	 $selected = ' selected ';
 	                    }
-
 	                   	$user_login =   $user_id->data->user_login;
-	                   	$first_name = get_user_meta ( $user_id->data->ID,'first_name',true);
-	                   	$last_name = get_user_meta ( $user_id->data->ID,'last_name',true);
+	                   	$first_name = get_user_meta ( $user_id->data->ID, 'first_name',true );
+	                   	$last_name = get_user_meta ( $user_id->data->ID, 'last_name', true);
 	                    echo '<option value="' . esc_attr( $ID ) . '" '  .$selected. ' >
-	                    		'.__($first_name." ".$last_name." (". $user_login.")", "learndash_pfl").'
+	                    		'.__( $first_name ." ". $last_name ." (". $user_login .")", "learndash_pfl").'
 	                    	</option>';
 	                }
 
-	               $temp_users = $access_user;
-	               foreach ( $temp_users as $temp_user_id ) {
-	               	 echo '<option value="' . esc_attr( $temp_user_id ) . '" selected >'.__("temp ".$temp_user_id, "learndash_pfl").'</option>';
-	               }
 	            ?>
 	        </select>					
 	      </div>
@@ -158,6 +141,7 @@ function learndash_lesson_meta_box_callback( $post ) {
     <?php
 }
 
+add_action( 'save_post', 'save_learndash_lesson_meta_box_data' );
 function save_learndash_lesson_meta_box_data( $post_id ) {
 
    
@@ -169,7 +153,7 @@ function save_learndash_lesson_meta_box_data( $post_id ) {
         return;
     }
 
-       if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
         return;
     }
 
@@ -187,12 +171,10 @@ function save_learndash_lesson_meta_box_data( $post_id ) {
         }
     }
 
-    if(isset($_POST['ld_lesson_active']) and $_POST['ld_lesson_active']=="1")
-    {
+    if( isset( $_POST['ld_lesson_active'] ) and $_POST['ld_lesson_active'] == "1" ) {
     	$active = "1";
     }
-    else
-    {
+    else {
     	$active = "0";
 	}
     	
@@ -200,9 +182,8 @@ function save_learndash_lesson_meta_box_data( $post_id ) {
 	
 	if( isset( $_POST['access_user_id'] ) ){
 		$access_user_id  = $_POST['access_user_id']; 
-		update_post_meta( $post_id, 'access_user_id', maybe_serialize($access_user_id )) ;
+		update_post_meta( $post_id, 'access_user_id', maybe_serialize( $access_user_id ) );
 	}
 }
 
-add_action( 'save_post', 'save_learndash_lesson_meta_box_data' );
 ?>

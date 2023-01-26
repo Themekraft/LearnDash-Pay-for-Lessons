@@ -30,7 +30,6 @@ function woocommerce_wp_select_multiple( $field ) {
 }
 
 add_action( 'plugins_loaded', 'wcpt_register_lesson_type' );
-
 function wcpt_register_lesson_type () {
 
 	class WC_Product_Lesson_Type extends WC_Product {
@@ -43,13 +42,12 @@ function wcpt_register_lesson_type () {
 }
 
 add_filter( 'product_type_selector', 'wcpt_add_lesson_type_type' );
-
 function wcpt_add_lesson_type_type ( $type ) {
 	$type[ 'lesson_type' ] = __( 'Lesson', 'learndash_pfl' );
 	return $type;
 }
-add_filter( 'woocommerce_product_data_tabs', 'lesson_type_tab' );
 
+add_filter( 'woocommerce_product_data_tabs', 'lesson_type_tab' );
 function lesson_type_tab( $tabs ) {
 	$tabs['lesson_type'] = array(
 		'label'	   => __( 'Lesson', 'learndash_pfl' ),
@@ -60,9 +58,7 @@ function lesson_type_tab( $tabs ) {
 	return $tabs;
 }
 
-
 add_action( 'woocommerce_product_data_panels', 'wcpt_lesson_type_options_product_tab_content' );
-
 function wcpt_lesson_type_options_product_tab_content() {
 	global $post;
 	?><div id='lesson_type_options' class='panel woocommerce_options_panel'><?php
@@ -147,8 +143,7 @@ function wcpt_lesson_type_options_product_tab_content() {
 	</div><?php
 }
 
-function set_product_id($lesson_id,$post_id)
-{
+function set_product_id( $lesson_id, $post_id ) {
     $product_ids   = get_post_meta(
                     $lesson_id,
                     "product_ids",
@@ -170,10 +165,7 @@ function set_product_id($lesson_id,$post_id)
                     );
 }
 
-
-
 add_action( 'woocommerce_process_product_meta', 'save_lesson_type_options_field', 9999 );
-
 function save_lesson_type_options_field( $post_id ) {
 
 	$enable_lesson_type = isset( $_POST['_enable_lesson_type'] ) ? 'yes' : 'no';
@@ -205,8 +197,7 @@ function save_lesson_type_options_field( $post_id ) {
 	endif;
 }
 
-function first_lesson_fn($lesson_id) 
-{
+function first_lesson_fn( $lesson_id ) {
 	$first_lesson = false;
 	$courses = get_post_meta($lesson_id,'course_id');
 	if (!empty($courses)) 
@@ -232,30 +223,26 @@ function lesson__add_to_content( $content ) {
 	global $post;
 
     if( is_single() && 'sfwd-lessons' === $post->post_type  ) {
-    	$my_id = get_the_ID();
+    	$item_id = get_the_ID();
 
-    	$ld_lesson_active = get_post_meta($my_id, '_ld_lesson_active',true);
-    	if($ld_lesson_active=="1")
-    	{
-			$product_ids   = get_post_meta($my_id, "product_ids", true);
-			$product_ids   = unserialize($product_ids);
+    	$ld_lesson_active = get_post_meta( $item_id, '_ld_lesson_active', true );
+    	if ($ld_lesson_active == "1" ) {
+			$product_ids   = get_post_meta( $item_id, "product_ids", true );
+			$product_ids   = unserialize( $product_ids );
 
-    		if(is_user_logged_in())
-    		{
+    		if( is_user_logged_in() ) {
     		
     			$user_id=get_current_user_id();
 
-    			$post_meta = get_post_meta($my_id,'access_user_id',true);
+    			$post_meta = get_post_meta( $item_id, 'access_user_id', true );
 
-				$post_meta = unserialize($post_meta);
+				$post_meta = unserialize( $post_meta );
 	
-				if($post_meta)
-	    		{
-	    			set_lesson_access(array($my_id),$user_id);
+				if( $post_meta ) {
+	    			set_lesson_access( array( $item_id ), $user_id );
 		    	}	
 	    		
-	    		if (empty($product_ids)) 
-	    		{
+	    		if ( empty( $product_ids ) ) {
 		    		$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
@@ -265,13 +252,12 @@ function lesson__add_to_content( $content ) {
 						   </div>
 						</div>';
 	    		} else {
-					$post_meta = get_post_meta($my_id, 'access_user_id',true);
-					$post_meta = @unserialize($post_meta);
-					if(!is_array($post_meta) || !in_array($user_id,$post_meta))
-		    		{
-		    			if (count($product_ids) == 1) {
-		    				$my_id = $product_ids[0];
-		    				$permalink = get_permalink($my_id);
+					$post_meta = get_post_meta( $item_id, 'access_user_id', true );
+					$post_meta = @unserialize( $post_meta );
+					if( ! is_array( $post_meta ) || ! in_array( $user_id, $post_meta ) ) {
+		    			if ( count( $product_ids ) == 1 ) {
+		    				$item_id = $product_ids[0];
+		    				$permalink = get_permalink( $item_id );
 		    				$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
 						      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
@@ -280,14 +266,12 @@ function lesson__add_to_content( $content ) {
 						   </div>
 						</div>';
 		    			}
-		    			else
-		    			{
+		    			else {
 		    				$products = '';
-		    				foreach($product_ids as $val22)
-		    				{
-			    				$my_id = $val22;
-			    				$permalink = get_permalink($my_id);
-			    				$products .= ' <a href="'.$permalink.'"  target="_blank">'.__(get_the_title($my_id), "learndash_pfl").'</a>  &nbsp;';
+		    				foreach( $product_ids as $product_lesson_id ) {
+			    				$item_id = $product_lesson_id;
+			    				$permalink = get_permalink( $item_id );
+			    				$products .= ' <a href="'.$permalink.'"  target="_blank">'.__(get_the_title($item_id), "learndash_pfl").'</a>  &nbsp;';
 		    				}
 
 		    				$content = '<div class="ld-alert ld-alert-warning">
@@ -298,40 +282,31 @@ function lesson__add_to_content( $content ) {
 						   </div>
 						</div>';
 		    			}
-		    		}
-		    		else 
-		    		{
-			    		$courses = get_post_meta($my_id,'course_id');
-				    	if (!empty($courses)) 
-				    	{
-					    	if(is_array($courses) && count($courses) > 0)
-				    		{
+		    		} else {
+			    		$courses = get_post_meta( $item_id, 'course_id' );
+				    	if ( ! empty( $courses ) ) {
+					    	if( is_array( $courses ) && count( $courses ) > 0 ) {
 				    			$course_id = $courses[0];
-				    			$course_meta = get_post_meta($course_id,'ld_course_steps',true);
-				    			$lesson_ar = (isset($course_meta['steps']['h']['sfwd-lessons']) ? $course_meta['steps']['h']['sfwd-lessons'] : array());
+				    			$course_meta = get_post_meta( $course_id, 'ld_course_steps', true );
+				    			$lesson_ar = ( isset( $course_meta['steps']['h']['sfwd-lessons'] ) ? $course_meta['steps']['h']['sfwd-lessons'] : array() );
 
-				    			if (isset($lesson_ar) && is_array($lesson_ar) && count($lesson_ar) > 0 ) 
-				    			{
+				    			if ( isset( $lesson_ar ) && is_array( $lesson_ar ) && count( $lesson_ar ) > 0 ) {
 			    					$page_data = array();
-				    				foreach ($lesson_ar as $key => $value) 
-				    				{
-				    					$posts_meta	= get_post_meta($key, 'access_user_id',true);
+				    				foreach ( $lesson_ar as $key => $value ) {
+				    					$posts_meta	= get_post_meta( $key, 'access_user_id', true );
 										$posts_meta	= unserialize($posts_meta);
 										
-										if(!is_array($posts_meta) || !in_array($user_id,$posts_meta))
-		    							{
-		    								$ld_lesson_active = get_post_meta($key, '_ld_lesson_active',true);
-									    	if($ld_lesson_active=="1")
-									    	{
+										if( ! is_array( $posts_meta ) || ! in_array( $user_id, $posts_meta ) ) {
+		    								$ld_lesson_active = get_post_meta( $key, '_ld_lesson_active', true );
+									    	if( $ld_lesson_active == "1" ) {
 	    										$page_data[] = $key;
 									    	}
-		    							} 
-		    							else if ($key == $my_id) {
+		    							} else if ( $key == $item_id ) {
 		    								break;
 		    							}
 				    				}
-				    				if (count($page_data) > 0) {
-				    					$permalink = get_permalink($page_data[0]);
+				    				if ( count( $page_data ) > 0 ) {
+				    					$permalink = get_permalink( $page_data[0] );
 
 					    				$content = '<div class="ld-alert ld-alert-warning">
 													   <div class="ld-alert-content">
@@ -353,20 +328,9 @@ function lesson__add_to_content( $content ) {
 				    	}
 		    		}
 	    		}
-    		}
-    		else
-    		{
-
-    			$post_meta = get_post_meta($my_id,'access_user_id',true);
-
-				$post_meta = @unserialize($post_meta);
-				
-				if($post_meta) {
-		    	}
-    			
-    			else if(first_lesson_fn($my_id))
-    			{
-    				$product_ids   = get_post_meta($my_id, "product_ids", true);
+    		} else {
+    			if( first_lesson_fn( $item_id ) ) {
+    				$product_ids   = get_post_meta($item_id, "product_ids", true);
 		    		$product_ids   = unserialize($product_ids);
 		    		if (empty($product_ids))
 		    		{
@@ -380,8 +344,8 @@ function lesson__add_to_content( $content ) {
 						</div>';
 		    		} 
 		    		else {
-						$my_id = $product_ids[0];
-	    				$permalink = get_permalink($my_id);
+						$item_id = $product_ids[0];
+	    				$permalink = get_permalink($item_id);
 	    				$content = '<div class="ld-alert ld-alert-warning">
 							   <div class="ld-alert-content">
 							      <div class="ld-alert-icon ld-icon ld-icon-alert"></div>
@@ -390,9 +354,7 @@ function lesson__add_to_content( $content ) {
 							   </div>
 							</div>';
 		    		}
-    			}
-    			else
-    			{
+    			} else {
     				$return_url = esc_url( home_url( '/login/' ) );	
     				$content = '<div class="ld-alert ld-alert-warning">
 						   <div class="ld-alert-content">
@@ -411,6 +373,18 @@ function lesson__add_to_content( $content ) {
 
     return $content;
 }
-add_filter('the_content', 'lesson__add_to_content');
+add_filter( 'the_content', 'lesson__add_to_content' );
+
+add_filter('woocommerce_product_add_to_cart_text', 'pay_lesson_read_more_text');
+function pay_lesson_read_more_text( $value ){
+	global $product;
+	if( isset( $product ) && is_object( $product )){
+		$product_type = $product->get_type();
+		if( 'lesson_type' == $product_type ){
+			$value = __( 'Add to cart', 'woocommerce' );
+		}
+	}
+	return $value;
+}
 
 ?>
