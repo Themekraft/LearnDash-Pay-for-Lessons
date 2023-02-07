@@ -53,7 +53,7 @@ function lesson_type_tab( $tabs ) {
 		'label'	   => __( 'Lesson', 'learndash_pfl' ),
 		'target'   => 'lesson_type_options',
 		'class'    => ('show_if_lesson_type'),
-		'priority' => 5,
+		'priority' => 10,
 	);
 	return $tabs;
 }

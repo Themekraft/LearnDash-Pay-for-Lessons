@@ -114,10 +114,8 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
         global $post, $pagenow;
         if ( $pagenow == 'post-new.php' || $pagenow == 'post.php' ) {
             if ( 'product' === $post->post_type ) {     
-                wp_register_style( 'select2css', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.css', false, '1.0', 'all' );
-                wp_register_script( 'select2', 'https://cdnjs.cloudflare.com/ajax/libs/select2/3.4.8/select2.js', array( 'jquery' ), '1.0', true );
-                wp_enqueue_style( 'select2css' );
-                wp_enqueue_script( 'select2' );
+                wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
+                wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', 'jquery', '4.1.0-rc.0');
             }
         }
 	}
@@ -127,8 +125,7 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 		global $post,$pagenow;
         if ( $pagenow == 'post-new.php' || $pagenow == 'post.php' ) {
             if ( 'product' === $post->post_type ) {     
-                echo '<style type="text/css">.select2-container {margin: 0 2px 0 2px;}.tablenav.top #doaction, #doaction2, #post-query-submit {margin: 0px 4px 0 4px;}</style>';
-                echo '<script type="text/javascript">jQuery(document).ready(function($){jQuery(".select2").select2();jQuery(document.body).on("click",function(){jQuery("select").select2();});});</script>';
+                echo  '<script type="text/javascript">jQuery(document).ready(function($){jQuery(".lesson_form_select").select2();});</script>' ;
             }
         }
 	}

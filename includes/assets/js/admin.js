@@ -23,11 +23,11 @@ function prod_course_lessons() {
 	var courses = jQuery('#_course_id').val();        
 	jQuery.ajax({
 		type: "POST",
-		url: pfl-ajax.ajaxurl,
+		url: lpflajax.ajaxurl,
 		data: { 
 		    action: 'get_course_lessons',
 		    courses: courses,
-		    productID: pfl-ajax.product_id
+		    productID: lpflajax.product_id
 		},
 		cache: false,
 		success: function(data)

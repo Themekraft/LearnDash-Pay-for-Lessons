@@ -90,9 +90,9 @@ function add_admin_scripts( $hook ) {
     $product_id = isset( $_REQUEST['post'] ) ? ( int ) $_REQUEST['post'] : '';
     if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
         $template_path = plugin_dir_url(__FILE__) . "assets/js/admin.js";
-        wp_register_script( "pfl-admin-js", $template_path, array('jquery') );
-        wp_localize_script( 'pfl-admin-js', 'pfl-ajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'product_id' => $product_id ) );
-        wp_enqueue_script( 'pfl-admin-js' );
+        wp_register_script( 'addlessonproduct', $template_path, array('jquery') );
+        wp_localize_script( 'addlessonproduct', 'lpflajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'product_id' => $product_id ) );
+        wp_enqueue_script( 'addlessonproduct' );
     }
 }
 
