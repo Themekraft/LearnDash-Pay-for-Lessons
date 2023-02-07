@@ -3,7 +3,7 @@ Contributors: svenl77, themekraft, buddyforms
 Tags: learndash, woocommerce, lessons, pay for lesson, student
 Requires at least: 3.9
 Tested up to: 6.1.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,6 +30,12 @@ Upload the entire plugin folder to the /wp-content/plugins/ directory or install
 Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
+= 1.0.3 - 07 Feb 2023 =
+* Fixed issue with ajax call on lesson product page.
+* Fixed jQuery error related with select2 library.
+* Enabled bundle license auto activation.
+* Updated trial version.
+
 = 1.0.2 - 26 Jan 2023 =
 * Fixed issue with course access after having made the purchase.
 * Fixed issue in lessons prior to plugin activation.
