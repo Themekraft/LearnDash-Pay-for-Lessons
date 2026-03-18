@@ -10,15 +10,14 @@
 * Author URI: https://themekraft.com/
 */
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 if ( ! function_exists( 'dpflww_fs' ) ) {
     // Create a helper function for easy SDK access.
     function dpflww_fs() {
         global $dpflww_fs;
 
         if ( ! isset( $dpflww_fs ) ) {
-            // Include Freemius SDK.
-            require_once dirname(__FILE__) . '/includes/resources/freemius/start.php';
-
             $dpflww_fs = fs_dynamic_init( array(
                 'id'                  => '9380',
                 'slug'                => 'learn-dash-pay-for-lessons-with-woocommerce',
