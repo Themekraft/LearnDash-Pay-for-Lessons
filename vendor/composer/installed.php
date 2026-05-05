@@ -3,7 +3,7 @@
         'name' => 'themekraft/learndash-pay-for-lessons',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => 'ffd099e9eed7cf3a73dd8a6f1ad56682f8a25f9a',
+        'reference' => '8f31425c0e2ac0ca929aa94340f2ae9d24bf28fc',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -22,7 +22,7 @@
         'themekraft/learndash-pay-for-lessons' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => 'ffd099e9eed7cf3a73dd8a6f1ad56682f8a25f9a',
+            'reference' => '8f31425c0e2ac0ca929aa94340f2ae9d24bf28fc',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
