@@ -40,6 +40,11 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 * Plugin Check: escaped the WooCommerce-not-active admin notice with `esc_html__`.
 * Plugin Check: moved the select2 inline initialiser into `admin_print_footer_scripts` and marked the select2 enqueue as `in_footer`, plus passed a localized nonce + ajaxUrl object for the lesson-fetch flow.
 * Cleaned up the `lesson-type.php` template: dropped the redundant `_e( esc_html( ... ) )` and emit the cart-text via `esc_html()`.
+* Plugin Check: hardened the WooCommerce product save handler (`save_lesson_type_options_field`) — added a dedicated nonce + capability check, sanitised every `$_POST` access with `wp_unslash` + `sanitize_text_field`, and validated `_course_id` / `_lesson_id` arrays as positive integers.
+* Plugin Check: hardened the LearnDash lesson save handler (`save_learndash_lesson_meta_box_data`) — sanitised + unslashed the existing nonce before verification, sanitised the `post_type` field with `sanitize_key`, and cast `access_user_id` array members through `absint`.
+* Plugin Check: rewrote the lesson-content alert renderer (`lesson__add_to_content`) so every dynamic value is run through `esc_html`, `esc_url`, or `wp_json_encode` (for the JS redirect) — previously the rendered HTML interpolated raw `get_permalink()` URLs and translated post titles via the disallowed variable-string `__()` form.
+* Plugin Check: rewrote the LearnDash lesson meta-box callback (`learndash_lesson_meta_box_callback`) and the WooCommerce multi-select helper (`woocommerce_wp_select_multiple`) to escape every output, including the user-name dropdown labels and the option list under "Allowed Users".
+* Plugin Check: wired the existing `lpflajax` script-localised object to carry the new `get_course_lessons` nonce and an `i18n` bag; updated `assets/js/admin.js` to send the nonce as `_wpnonce` and replaced a long-standing bug where line 17 embedded a literal `<?php _e() ?>` tag inside the JS file (the alert would have rendered the raw template string).
 * Updated Freemius SDK to 2.13.1.
 * Tested up to WordPress 6.9.
 
