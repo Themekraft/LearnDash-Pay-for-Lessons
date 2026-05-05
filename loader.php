@@ -19,24 +19,26 @@ if ( ! function_exists( 'dpflww_fs' ) ) {
 
         if ( ! isset( $dpflww_fs ) ) {
             $dpflww_fs = fs_dynamic_init( array(
-                'id'                  => '9380',
-                'slug'                => 'learn-dash-pay-for-lessons-with-woocommerce',
-                'premium_slug'        => 'Learn-dash-pay-for-lessons-with-wooCommerce-premium',
-                'type'                => 'plugin',
-                'public_key'          => 'pk_b9fecc8926d3242517fbefb590a9b',
-                'is_premium'          => true,
-                'is_premium_only'     => true,
-                'has_addons'          => false,
-                'has_paid_plans'      => true,
-                'trial'               => array(
+                'id'                             => '9380',
+                'slug'                           => 'learn-dash-pay-for-lessons-with-woocommerce',
+                'premium_slug'                   => 'Learn-dash-pay-for-lessons-with-wooCommerce-premium',
+                'type'                           => 'plugin',
+                'public_key'                     => 'pk_b9fecc8926d3242517fbefb590a9b',
+                'is_premium'                     => true,
+                'is_premium_only'                => true,
+                'has_addons'                     => false,
+                'has_paid_plans'                 => true,
+                'is_org_compliant'               => true,
+                'wp_org_gatekeeper'              => 'OA7#BoRiBNqdf52FvzEf!!074aRLPs8fspif$7K1#4u4Csys1fQlCecVcUTOs2mcpeVHi#C2j9d09fOTvbC0HloPT7fFee5WdS3G',
+                'trial'                          => array(
                     'days'               => 7,
                     'is_require_payment' => true,
                 ),
-                'menu'                => array(
-                    'first-path'     => 'plugins.php',
-                    'support'        => false,
+                'menu'                           => array(
+                    'first-path' => 'plugins.php',
+                    'support'    => false,
                 ),
-				'bundle_license_auto_activation' => true,
+                'bundle_license_auto_activation' => true,
             ) );
         }
 
@@ -47,8 +49,6 @@ if ( ! function_exists( 'dpflww_fs' ) ) {
     dpflww_fs();
     // Signal that SDK was initiated.
     do_action( 'dpflww_fs_loaded' );
-} else{
-	die;
 }
 
 if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins') ) ) && dpflww_fs()->is_paying() ) {

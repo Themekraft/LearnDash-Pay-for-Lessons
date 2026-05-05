@@ -3,7 +3,7 @@
         'name' => 'themekraft/learndash-pay-for-lessons',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => 'ebd3b2f677c84e32d2abba73b19ad311b1aa5157',
+        'reference' => 'b386201f6dd1d6e5bba69285da7e8f25cce5682d',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'freemius/wordpress-sdk' => array(
-            'pretty_version' => '2.13.0',
-            'version' => '2.13.0.0',
-            'reference' => '3cbe98b5bd0b0fb5ca4df97b8088592737ea4375',
+            'pretty_version' => '2.13.1',
+            'version' => '2.13.1.0',
+            'reference' => '7376c0eca1ae7f92aaba9d3b550bd10affe797ff',
             'type' => 'library',
             'install_path' => __DIR__ . '/../freemius/wordpress-sdk',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'themekraft/learndash-pay-for-lessons' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => 'ebd3b2f677c84e32d2abba73b19ad311b1aa5157',
+            'reference' => 'b386201f6dd1d6e5bba69285da7e8f25cce5682d',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

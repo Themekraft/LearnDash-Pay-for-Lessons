@@ -10,7 +10,8 @@
   "homepage": "https://themekraft.com/",
   "license": "GPLv2 or later",
   "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
-    "freemius/wordpress-sdk": "^2.13"
+    "freemius/wordpress-sdk": "^2.13.1"
   }
 }
