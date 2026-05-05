@@ -32,6 +32,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 == Changelog ==
 = 1.0.4 - 04 May 2026 =
 * Updated Freemius SDK to 2.13.1.
+* Tested up to WordPress 6.9.
 
 = 1.0.3 - 07 Feb 2023 =
 * Fixed issue with ajax call on lesson product page.
