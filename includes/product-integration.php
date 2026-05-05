@@ -90,14 +90,31 @@ function learndash_pfl_check_access( $course, $user ){
 
 add_action( 'admin_enqueue_scripts', 'add_admin_scripts', 5, 1 );
 function add_admin_scripts( $hook ) {
-    global $post;
-    $product_id = isset( $_REQUEST['post'] ) ? ( int ) $_REQUEST['post'] : '';
-    if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
-        $template_path = plugin_dir_url(__FILE__) . "assets/js/admin.js";
-        wp_register_script( 'addlessonproduct', $template_path, array('jquery') );
-        wp_localize_script( 'addlessonproduct', 'lpflajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ), 'product_id' => $product_id ) );
-        wp_enqueue_script( 'addlessonproduct' );
-    }
+	global $post;
+	if ( $hook !== 'post-new.php' && $hook !== 'post.php' ) {
+		return;
+	}
+
+	$product_id     = isset( $_REQUEST['post'] ) ? absint( wp_unslash( $_REQUEST['post'] ) ) : 0;
+	$script_url     = plugin_dir_url( __FILE__ ) . 'assets/js/admin.js';
+	$script_version = file_exists( plugin_dir_path( __FILE__ ) . 'assets/js/admin.js' )
+		? filemtime( plugin_dir_path( __FILE__ ) . 'assets/js/admin.js' )
+		: false;
+
+	wp_register_script( 'addlessonproduct', $script_url, array( 'jquery' ), $script_version, true );
+	wp_localize_script(
+		'addlessonproduct',
+		'lpflajax',
+		array(
+			'ajaxurl'    => admin_url( 'admin-ajax.php' ),
+			'product_id' => $product_id,
+			'nonce'      => wp_create_nonce( 'learndash_pfl_get_course_lessons' ),
+			'i18n'       => array(
+				'cannotUnselectAll' => esc_html__( 'You cannot unselect a lesson while "All Lessons" is checked.', 'learndash-pfl' ),
+			),
+		)
+	);
+	wp_enqueue_script( 'addlessonproduct' );
 }
 
 ?>

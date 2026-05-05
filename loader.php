@@ -148,15 +148,6 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 		if ( ( $pagenow === 'post-new.php' || $pagenow === 'post.php' ) && isset( $post->post_type ) && 'product' === $post->post_type ) {
 			wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0' );
 			wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array( 'jquery' ), '4.1.0-rc.0', true );
-
-			wp_localize_script(
-				'select2-js',
-				'learndashPflLessons',
-				array(
-					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-					'nonce'   => wp_create_nonce( 'learndash_pfl_get_course_lessons' ),
-				)
-			);
 		}
 	}
 
