@@ -32,6 +32,14 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 == Changelog ==
 = 1.0.4 - 04 May 2026 =
 * Plugin Check: added the License plugin-header field and stripped hidden macOS metadata from the release.
+* Plugin Check: renamed the text domain from `learndash_pfl` to `learndash-pfl` (WP requires lowercase + hyphens) and propagated the new domain across every translation call.
+* Plugin Check: removed the non-existent Domain Path header.
+* Plugin Check: normalised line endings to LF (was mixed CRLF/LF).
+* Plugin Check: added direct file access protection (`if ( ! defined( 'ABSPATH' ) ) exit;`) to every PHP file in the plugin.
+* Plugin Check: hardened the `get_course_lessons` AJAX handler — added a capability check, nonce verification, sanitised the `courses` and `productID` request parameters with `absint`/`wp_unslash`, escaped the rendered `<option>` markup with `wp_kses`, replaced the variable-text `__()` call on lesson titles with `esc_html( get_the_title() )`, and removed the public (`nopriv`) AJAX hook so anonymous visitors can't hit the endpoint.
+* Plugin Check: escaped the WooCommerce-not-active admin notice with `esc_html__`.
+* Plugin Check: moved the select2 inline initialiser into `admin_print_footer_scripts` and marked the select2 enqueue as `in_footer`, plus passed a localized nonce + ajaxUrl object for the lesson-fetch flow.
+* Cleaned up the `lesson-type.php` template: dropped the redundant `_e( esc_html( ... ) )` and emit the cart-text via `esc_html()`.
 * Updated Freemius SDK to 2.13.1.
 * Tested up to WordPress 6.9.
 

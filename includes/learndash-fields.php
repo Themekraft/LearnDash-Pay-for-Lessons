@@ -1,11 +1,15 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action( 'add_meta_boxes', 'learndash_lesson_meta_box' );
 function learndash_lesson_meta_box() {
 	if( dpflww_fs()->is_paying() ){
 		add_meta_box(
 			'learndash_lesson',
-			__( 'Woocommece Lesson Setting', 'learndash_pfl' ),
+			__( 'Woocommece Lesson Setting', 'learndash-pfl' ),
 			'learndash_lesson_meta_box_callback',
 			"sfwd-lessons"
 		);
@@ -23,11 +27,11 @@ function learndash_lesson_meta_box_callback( $post ) {
     ?>
     <div id="_ld_lesson_price" class="sfwd_input sfwd_input_type_checkbox ">
 	   <span class="sfwd_option_label" style="padding:10px 0px">
-	      <a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php _e('It will be mark as paid once it will be added in woocommerce product but you can make is as free if you wanted','learndash_pfl'); ?>" >
+	      <a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php _e('It will be mark as paid once it will be added in woocommerce product but you can make is as free if you wanted','learndash-pfl'); ?>" >
 	      <img alt="" src="<?php echo plugins_url();?>/lesson_buy/images/question.png">
 	      <label for="_ld_lesson_price" class="sfwd_label">
 	       
-	       	<?php _e('Make As Paid','learndash_pfl'); ?>
+	       	<?php _e('Make As Paid','learndash-pfl'); ?>
 
 	  	  </label>
 	      </a>
@@ -38,7 +42,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	      <div class="sfwd_option_div">
 	         <fieldset>
 	            <legend class="screen-reader-text">
-	            	<span><?php _e( 'Setting', 'learndash_pfl' )?></span>
+	            	<span><?php _e( 'Setting', 'learndash-pfl' )?></span>
 	            </legend>
 	            <p class="learndash-section-field-checkbox-p">
 	            	<input type="checkbox" 
@@ -46,7 +50,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	            	 name="ld_lesson_active" value="1" <?php echo $checked;?>
 
 	            	 class="learndash-section-field learndash-section-field-checkbox  ld-checkbox-input" >
-	            	 <label class="ld-checkbox-input__label" for="ld_lesson_active-yes"><span><?php _e( 'Yes', 'learndash_pfl' )?></span></label></p>
+	            	 <label class="ld-checkbox-input__label" for="ld_lesson_active-yes"><span><?php _e( 'Yes', 'learndash-pfl' )?></span></label></p>
 	         </fieldset>
 	      </div>
 	   </span>
@@ -62,7 +66,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	     
 	      	<label for="sfwd_option_label_2" class="sfwd_label">
 	      		
-	      		<?php  _e( 'Product(s) Attached', 'learndash_pfl' )?>							
+	      		<?php  _e( 'Product(s) Attached', 'learndash-pfl' )?>							
 	  		</label>
 	      </a>
 
@@ -74,13 +78,13 @@ function learndash_lesson_meta_box_callback( $post ) {
 	    		$product_ids   = unserialize( $product_ids );
 	    		$content	   = '';
 	    		if ( empty( $product_ids ) ) {
-		    		$content = __( "No Product Attached", "learndash_pfl" );	
+		    		$content = __( "No Product Attached", "learndash-pfl" );	
 	    		} 
 	    		else {
     				foreach( $product_ids as $attached_product ) {
 	    				$product_id = $attached_product;
 	    				$permalink = get_permalink( $product_id );
-	    				$content .= ' <a href="'.$permalink.'"  target="_blank">'.__( get_the_title( $product_id ), "learndash_pfl").'</a> <br>';
+	    				$content .= ' <a href="'.$permalink.'"  target="_blank">'.__( get_the_title( $product_id ), "learndash-pfl").'</a> <br>';
     				}
 	    		}
 	    		echo $content;
@@ -93,11 +97,11 @@ function learndash_lesson_meta_box_callback( $post ) {
 
 	<div id="sfwd_option_label_1" class="sfwd_input sfwd_input_type_text ">
 	   <span class="sfwd_option_label">
-	      <a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php _e('Click for Help!', 'learndash_pfl'); ?>" >
+	      <a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php _e('Click for Help!', 'learndash-pfl'); ?>" >
 	      <img alt="" src="<?php echo plugins_url();?>/lesson_buy/images/question.png">
 	     
 	      	<label for="sfwd_option_label_1" class="sfwd_label">
-	      		<?php _e( 'Allowed Users', 'learndash_pfl' ); ?>							
+	      		<?php _e( 'Allowed Users', 'learndash-pfl' ); ?>							
 	  		</label>
 	      </a>
 	   </span>
@@ -113,7 +117,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 		    }
 		   
 		    ?>
-		    <select multiple="multiple" class="select2" id="subscription_toggle_ids" name="access_user_id[]" data-placeholder="<?php esc_attr_e( 'Select User', 'learndash_pfl' ); ?>"  >
+		    <select multiple="multiple" class="select2" id="subscription_toggle_ids" name="access_user_id[]" data-placeholder="<?php esc_attr_e( 'Select User', 'learndash-pfl' ); ?>"  >
 	            <?php
 	                
 	                foreach ( $users as $user_id ) {
@@ -127,7 +131,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	                   	$first_name = get_user_meta ( $user_id->data->ID, 'first_name',true );
 	                   	$last_name = get_user_meta ( $user_id->data->ID, 'last_name', true);
 	                    echo '<option value="' . esc_attr( $ID ) . '" '  .$selected. ' >
-	                    		'.__( $first_name ." ". $last_name ." (". $user_login .")", "learndash_pfl").'
+	                    		'.__( $first_name ." ". $last_name ." (". $user_login .")", "learndash-pfl").'
 	                    	</option>';
 	                }
 

@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 add_action( "woocommerce_single_product_summary", "lesson_type_template", 60 );
 function lesson_type_template() {
     global $product;

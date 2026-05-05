@@ -5,12 +5,15 @@
 * Description: LearnDash Pay for Lesson enables you to sell LearnDash Lessons using Woocommerce.
 * Author: Themekraft
 * Version: 1.0.4-beta.1
-* Text Domain: learndash_pfl
-* Domain Path: /languages
+* Text Domain: learndash-pfl
 * Author URI: https://themekraft.com/
 * License: GPLv2 or later
 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -74,71 +77,107 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 	include_once 'includes/product-integration.php';
 
 
-	add_action('wp_ajax_nopriv_get_course_lessons', 'get_course_lessons');
-	add_action('wp_ajax_get_course_lessons', 'get_course_lessons');
+	add_action( 'wp_ajax_get_course_lessons', 'get_course_lessons' );
 	function get_course_lessons() {
-		$courses = isset( $_REQUEST['courses'] ) ? $_REQUEST['courses'] : '';
-	    $args = array(
-			'posts_per_page' => '-1',
-		    'post_type'=> 'sfwd-lessons',
-		    'order'    => 'ASC',
-		    'meta_key' => 'course_id',
-		    'meta_query' => array(
-	            array(
-	                'key'     => 'course_id',
-	                'value'   => $courses,
-	                'compare' => 'IN',
-	            ),
-	    	),
-		); 
-		$lesson_idss = array();
-		if ( isset( $_REQUEST['productID']) && $_REQUEST['productID'] != '' ) {
-			$lesson_idss = unserialize( get_post_meta( $_REQUEST['productID'], '_lesson_id' , true ) );
-			
+		if ( ! current_user_can( 'edit_products' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
 		}
-		$options = '';
-		$options .= '<option value="">'.__("Select lesson", "learndash_pfl").'</option>';
+
+		$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'learndash_pfl_get_course_lessons' ) ) {
+			wp_send_json_error( array( 'message' => 'bad nonce' ), 403 );
+		}
+
+		$courses_raw = isset( $_REQUEST['courses'] ) ? wp_unslash( $_REQUEST['courses'] ) : array();
+		if ( ! is_array( $courses_raw ) ) {
+			$courses_raw = array_filter( array_map( 'trim', explode( ',', (string) $courses_raw ) ) );
+		}
+		$courses = array_map( 'absint', $courses_raw );
+
+		$product_id = isset( $_REQUEST['productID'] ) ? absint( wp_unslash( $_REQUEST['productID'] ) ) : 0;
+
+		$args = array(
+			'posts_per_page' => -1,
+			'post_type'      => 'sfwd-lessons',
+			'order'          => 'ASC',
+			'meta_key'       => 'course_id',
+			'meta_query'     => array(
+				array(
+					'key'     => 'course_id',
+					'value'   => $courses,
+					'compare' => 'IN',
+				),
+			),
+		);
+
+		$lesson_idss = array();
+		if ( $product_id ) {
+			$lesson_idss = unserialize( get_post_meta( $product_id, '_lesson_id', true ) );
+			if ( ! is_array( $lesson_idss ) ) {
+				$lesson_idss = array();
+			}
+		}
+
+		$options   = '<option value="">' . esc_html__( 'Select lesson', 'learndash-pfl' ) . '</option>';
 		$the_query = new WP_Query( $args );
-		if( $the_query->have_posts() ) : 
-		    while ( $the_query->have_posts() ) : 
-		       $the_query->the_post();
-		       $id  	 =	get_the_ID();
-		       $options .= '<option value="'.$id.'" '.( count( $lesson_idss ) > 0 && in_array( $id, $lesson_idss ) ? "selected" : "" ).'>'.__( get_the_title(), "learndash_pfl" ).'</option>';
-		    endwhile; 
-		    wp_reset_postdata(); 
+		if ( $the_query->have_posts() ) :
+			while ( $the_query->have_posts() ) :
+				$the_query->the_post();
+				$id       = get_the_ID();
+				$selected = ( count( $lesson_idss ) > 0 && in_array( $id, $lesson_idss, true ) ) ? ' selected' : '';
+				$options .= '<option value="' . esc_attr( $id ) . '"' . $selected . '>' . esc_html( get_the_title() ) . '</option>';
+			endwhile;
+			wp_reset_postdata();
 		endif;
-		echo $options;
-		die();
+
+		echo wp_kses(
+			$options,
+			array(
+				'option' => array(
+					'value'    => array(),
+					'selected' => array(),
+				),
+			)
+		);
+		wp_die();
 	}
 
 	add_action( 'admin_enqueue_scripts', 'enqueue_select2_jquery' );
 	function enqueue_select2_jquery() {
-        global $post, $pagenow;
-        if ( $pagenow == 'post-new.php' || $pagenow == 'post.php' ) {
-            if ( 'product' === $post->post_type ) {     
-                wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0');
-                wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', 'jquery', '4.1.0-rc.0');
-            }
-        }
+		global $post, $pagenow;
+		if ( ( $pagenow === 'post-new.php' || $pagenow === 'post.php' ) && isset( $post->post_type ) && 'product' === $post->post_type ) {
+			wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0' );
+			wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array( 'jquery' ), '4.1.0-rc.0', true );
+
+			wp_localize_script(
+				'select2-js',
+				'learndashPflLessons',
+				array(
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'learndash_pfl_get_course_lessons' ),
+				)
+			);
+		}
 	}
-	
-	add_action( 'admin_head', 'select2jquery_inline' );
+
+	add_action( 'admin_print_footer_scripts', 'select2jquery_inline' );
 	function select2jquery_inline() {
-		global $post,$pagenow;
-        if ( $pagenow == 'post-new.php' || $pagenow == 'post.php' ) {
-            if ( 'product' === $post->post_type ) {     
-                echo  '<script type="text/javascript">jQuery(document).ready(function($){jQuery(".lesson_form_select").select2();});</script>' ;
-            }
-        }
+		global $post, $pagenow;
+		if ( ( $pagenow === 'post-new.php' || $pagenow === 'post.php' ) && isset( $post->post_type ) && 'product' === $post->post_type ) {
+			?>
+			<script type="text/javascript">jQuery(function($){$('.lesson_form_select').select2();});</script>
+			<?php
+		}
 	}
 } else {
 	
 	function general_admin_notice() {
-         echo '<div class="notice notice-warning is-dismissible">
-	             <p>'.__("Buy lesson plugin required woocommerce plugin to activate", "learndash_pfl").'</p>
-	           </div>';
+		printf(
+			'<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
+			esc_html__( 'Buy lesson plugin required woocommerce plugin to activate', 'learndash-pfl' )
+		);
 	}
-	add_action('admin_notices', 'general_admin_notice');
+	add_action( 'admin_notices', 'general_admin_notice' );
 }
 
 ?>
