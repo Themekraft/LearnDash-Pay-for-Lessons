@@ -31,6 +31,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 
 == Changelog ==
 = 1.0.4 - 04 May 2026 =
+* Plugin Check: added the License plugin-header field and stripped hidden macOS metadata from the release.
 * Updated Freemius SDK to 2.13.1.
 * Tested up to WordPress 6.9.
 

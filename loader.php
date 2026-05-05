@@ -8,6 +8,8 @@
 * Text Domain: learndash_pfl
 * Domain Path: /languages
 * Author URI: https://themekraft.com/
+* License: GPLv2 or later
+* License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 require_once __DIR__ . '/vendor/autoload.php';
