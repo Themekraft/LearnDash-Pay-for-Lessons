@@ -167,7 +167,7 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 	function general_admin_notice() {
 		printf(
 			'<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
-			esc_html__( 'Buy lesson plugin required woocommerce plugin to activate', 'learndash-pfl' )
+			esc_html__( 'LearnDash Pay for Lessons requires the WooCommerce plugin to be active.', 'learndash-pfl' )
 		);
 	}
 	add_action( 'admin_notices', 'general_admin_notice' );

@@ -101,7 +101,7 @@ function wcpt_lesson_type_options_product_tab_content() {
 			<?php
 			woocommerce_wp_checkbox( array(
 				'id'    => '_enable_lesson_type',
-				'label' => __( 'Enable As Lesson Product', 'learndash-pfl' ),
+				'label' => __( 'Enable as Lesson Product', 'learndash-pfl' ),
 			) );
 
 			woocommerce_wp_text_input( array(
@@ -109,7 +109,7 @@ function wcpt_lesson_type_options_product_tab_content() {
 				'label'       => __( 'Regular price (€)', 'learndash-pfl' ),
 				'placeholder' => '',
 				'desc_tip'    => 'true',
-				'description' => __( 'Enter Lesson Regular Price.', 'learndash-pfl' ),
+				'description' => __( 'Enter the regular price for this lesson.', 'learndash-pfl' ),
 				'value'       => $regular_price,
 			) );
 
@@ -118,7 +118,7 @@ function wcpt_lesson_type_options_product_tab_content() {
 				'label'       => __( 'Sale price (€)', 'learndash-pfl' ),
 				'placeholder' => '',
 				'desc_tip'    => 'true',
-				'description' => __( 'Enter Lesson Sale Price.', 'learndash-pfl' ),
+				'description' => __( 'Enter the sale price for this lesson.', 'learndash-pfl' ),
 				'value'       => $sale_price,
 			) );
 
@@ -298,7 +298,7 @@ function lesson__add_to_content( $content ) {
 		$product_ids = array();
 	}
 
-	$paid_msg = esc_html__( 'This is paid content you need to contact admin regard buy this product.', 'learndash-pfl' );
+	$paid_msg = esc_html__( 'This is paid content. Please contact the administrator about purchasing this product.', 'learndash-pfl' );
 
 	if ( is_user_logged_in() ) {
 		$user_id = get_current_user_id();
@@ -331,7 +331,7 @@ function lesson__add_to_content( $content ) {
 				$products_html .= ' <a href="' . esc_url( $permalink ) . '" target="_blank">' . esc_html( get_the_title( $pid ) ) . '</a> &nbsp;';
 			}
 			return learndash_pfl_render_lesson_alert(
-				esc_html__( 'To buy this lesson buy following any product.', 'learndash-pfl' )
+				esc_html__( 'To buy this lesson, purchase any of the following products.', 'learndash-pfl' )
 				. ' &nbsp;' . $products_html
 			);
 		}
@@ -362,7 +362,7 @@ function lesson__add_to_content( $content ) {
 
 		if ( count( $page_data ) > 0 ) {
 			$permalink = esc_url( get_permalink( $page_data[0] ) );
-			$body      = esc_html__( 'Plz buy previous lessons first. You are redirecting to', 'learndash-pfl' )
+			$body      = esc_html__( 'Please buy the previous lessons first. You are being redirected to', 'learndash-pfl' )
 				. ' "' . esc_html( get_the_title( $page_data[0] ) ) . '" page.';
 			$alert     = learndash_pfl_render_lesson_alert( $body );
 

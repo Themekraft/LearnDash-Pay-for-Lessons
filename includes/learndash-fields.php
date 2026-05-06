@@ -9,7 +9,7 @@ function learndash_lesson_meta_box() {
 	if( dpflww_fs()->is_paying() ){
 		add_meta_box(
 			'learndash_lesson',
-			__( 'Woocommece Lesson Setting', 'learndash-pfl' ),
+			__( 'WooCommerce Lesson Settings', 'learndash-pfl' ),
 			'learndash_lesson_meta_box_callback',
 			"sfwd-lessons"
 		);
@@ -25,10 +25,10 @@ function learndash_lesson_meta_box_callback( $post ) {
 	?>
 	<div id="_ld_lesson_price" class="sfwd_input sfwd_input_type_checkbox">
 		<span class="sfwd_option_label" style="padding:10px 0px">
-			<a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_attr_e( 'It will be mark as paid once it will be added in woocommerce product but you can make is as free if you wanted', 'learndash-pfl' ); ?>">
+			<a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_attr_e( 'It will be marked as paid once it is added to a WooCommerce product, but you can leave it free if you prefer.', 'learndash-pfl' ); ?>">
 				<img alt="" src="<?php echo $question_ic; ?>">
 				<label for="_ld_lesson_price" class="sfwd_label">
-					<?php esc_html_e( 'Make As Paid', 'learndash-pfl' ); ?>
+					<?php esc_html_e( 'Mark as Paid', 'learndash-pfl' ); ?>
 				</label>
 			</a>
 		</span>
@@ -36,7 +36,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 			<div class="sfwd_option_div">
 				<fieldset>
 					<legend class="screen-reader-text">
-						<span><?php esc_html_e( 'Setting', 'learndash-pfl' ); ?></span>
+						<span><?php esc_html_e( 'Settings', 'learndash-pfl' ); ?></span>
 					</legend>
 					<p class="learndash-section-field-checkbox-p">
 						<input type="checkbox" id="ld_lesson_active-yes" name="ld_lesson_active" value="1" <?php checked( $active ); ?> class="learndash-section-field learndash-section-field-checkbox ld-checkbox-input">

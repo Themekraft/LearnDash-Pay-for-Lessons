@@ -47,6 +47,7 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 * Plugin Check: wired the existing `lpflajax` script-localised object to carry the new `get_course_lessons` nonce and an `i18n` bag; updated `assets/js/admin.js` to send the nonce as `_wpnonce` and replaced a long-standing bug where line 17 embedded a literal `<?php _e() ?>` tag inside the JS file (the alert would have rendered the raw template string).
 * Plugin Check: dropped the external select2 CDN enqueue and now reuse WooCommerce's bundled select2 (`select2` script handle) and admin styles, since this enqueue only runs on the WC product edit screen.
 * Plugin Check: annotated the intentional `meta_key` / `meta_query` lookup in `get_course_lessons` with `phpcs:ignore` (the lookup is required to find lessons by `course_id` and the AJAX endpoint is gated on `edit_products` + nonce).
+* Cleaned up the user-facing English copy: meta-box label "Woocommece Lesson Setting" → "WooCommerce Lesson Settings", checkbox "Make As Paid" → "Mark as Paid", "Buy lesson plugin required woocommerce plugin to activate" → "LearnDash Pay for Lessons requires the WooCommerce plugin to be active.", "Plz buy previous lessons first..." → "Please buy the previous lessons first...", and several other rewritten strings for clarity.
 * Updated Freemius SDK to 2.13.1.
 * Tested up to WordPress 6.9.
 
