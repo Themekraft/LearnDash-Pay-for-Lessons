@@ -96,6 +96,7 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 
 		$product_id = isset( $_REQUEST['productID'] ) ? absint( wp_unslash( $_REQUEST['productID'] ) ) : 0;
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- looking up lessons by course_id is intentional; called from a bounded admin AJAX request gated on edit_products + nonce.
 		$args = array(
 			'posts_per_page' => -1,
 			'post_type'      => 'sfwd-lessons',
@@ -146,8 +147,9 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 	function enqueue_select2_jquery() {
 		global $post, $pagenow;
 		if ( ( $pagenow === 'post-new.php' || $pagenow === 'post.php' ) && isset( $post->post_type ) && 'product' === $post->post_type ) {
-			wp_enqueue_style( 'select2-css', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css', array(), '4.1.0-rc.0' );
-			wp_enqueue_script( 'select2-js', 'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js', array( 'jquery' ), '4.1.0-rc.0', true );
+			// Reuse WooCommerce's bundled select2 4.0.3 (registered as the `select2` legacy handle for `wc-select2`) and admin styles instead of pulling from a CDN.
+			wp_enqueue_script( 'select2' );
+			wp_enqueue_style( 'woocommerce_admin_styles' );
 		}
 	}
 

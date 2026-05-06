@@ -45,6 +45,8 @@ Activate the plugin through the 'Plugins' menu in WordPress.
 * Plugin Check: rewrote the lesson-content alert renderer (`lesson__add_to_content`) so every dynamic value is run through `esc_html`, `esc_url`, or `wp_json_encode` (for the JS redirect) — previously the rendered HTML interpolated raw `get_permalink()` URLs and translated post titles via the disallowed variable-string `__()` form.
 * Plugin Check: rewrote the LearnDash lesson meta-box callback (`learndash_lesson_meta_box_callback`) and the WooCommerce multi-select helper (`woocommerce_wp_select_multiple`) to escape every output, including the user-name dropdown labels and the option list under "Allowed Users".
 * Plugin Check: wired the existing `lpflajax` script-localised object to carry the new `get_course_lessons` nonce and an `i18n` bag; updated `assets/js/admin.js` to send the nonce as `_wpnonce` and replaced a long-standing bug where line 17 embedded a literal `<?php _e() ?>` tag inside the JS file (the alert would have rendered the raw template string).
+* Plugin Check: dropped the external select2 CDN enqueue and now reuse WooCommerce's bundled select2 (`select2` script handle) and admin styles, since this enqueue only runs on the WC product edit screen.
+* Plugin Check: annotated the intentional `meta_key` / `meta_query` lookup in `get_course_lessons` with `phpcs:ignore` (the lookup is required to find lessons by `course_id` and the AJAX endpoint is gated on `edit_products` + nonce).
 * Updated Freemius SDK to 2.13.1.
 * Tested up to WordPress 6.9.
 
