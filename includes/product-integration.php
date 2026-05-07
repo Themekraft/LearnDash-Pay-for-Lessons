@@ -95,6 +95,7 @@ function add_admin_scripts( $hook ) {
 		return;
 	}
 
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only context lookup for an admin script enqueue; the value is absint'd and only used to localize the script.
 	$product_id     = isset( $_REQUEST['post'] ) ? absint( wp_unslash( $_REQUEST['post'] ) ) : 0;
 	$script_url     = plugin_dir_url( __FILE__ ) . 'assets/js/admin.js';
 	$script_version = file_exists( plugin_dir_path( __FILE__ ) . 'assets/js/admin.js' )

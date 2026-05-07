@@ -26,7 +26,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	<div id="_ld_lesson_price" class="sfwd_input sfwd_input_type_checkbox">
 		<span class="sfwd_option_label" style="padding:10px 0px">
 			<a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_attr_e( 'It will be marked as paid once it is added to a WooCommerce product, but you can leave it free if you prefer.', 'learndash-pfl' ); ?>">
-				<img alt="" src="<?php echo $question_ic; ?>">
+				<img alt="" src="<?php echo esc_url( $question_ic ); ?>">
 				<label for="_ld_lesson_price" class="sfwd_label">
 					<?php esc_html_e( 'Mark as Paid', 'learndash-pfl' ); ?>
 				</label>
@@ -51,7 +51,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	<div id="sfwd_option_label_2" class="sfwd_input sfwd_input_type_text">
 		<span class="sfwd_option_label">
 			<a class="sfwd_help_text_link" style="cursor:pointer;" title="Click for Help!">
-				<img alt="" src="<?php echo $question_ic; ?>">
+				<img alt="" src="<?php echo esc_url( $question_ic ); ?>">
 				<label for="sfwd_option_label_2" class="sfwd_label">
 					<?php esc_html_e( 'Product(s) Attached', 'learndash-pfl' ); ?>
 				</label>
@@ -83,7 +83,7 @@ function learndash_lesson_meta_box_callback( $post ) {
 	<div id="sfwd_option_label_1" class="sfwd_input sfwd_input_type_text">
 		<span class="sfwd_option_label">
 			<a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_attr_e( 'Click for Help!', 'learndash-pfl' ); ?>">
-				<img alt="" src="<?php echo $question_ic; ?>">
+				<img alt="" src="<?php echo esc_url( $question_ic ); ?>">
 				<label for="sfwd_option_label_1" class="sfwd_label">
 					<?php esc_html_e( 'Allowed Users', 'learndash-pfl' ); ?>
 				</label>
@@ -147,7 +147,7 @@ function save_learndash_lesson_meta_box_data( $post_id ) {
 		return;
 	}
 
-	$active = ( isset( $_POST['ld_lesson_active'] ) && '1' === (string) wp_unslash( $_POST['ld_lesson_active'] ) ) ? '1' : '0';
+	$active = ( isset( $_POST['ld_lesson_active'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['ld_lesson_active'] ) ) ) ? '1' : '0';
 	update_post_meta( $post_id, '_ld_lesson_active', $active );
 
 	if ( isset( $_POST['access_user_id'] ) ) {

@@ -406,6 +406,7 @@ function pay_lesson_read_more_text( $value ){
 	if( isset( $product ) && is_object( $product )){
 		$product_type = $product->get_type();
 		if( 'lesson_type' == $product_type ){
+			// phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- intentionally reusing WooCommerce's existing translation for "Add to cart" so the button label localizes consistently with the rest of the cart UI.
 			$value = __( 'Add to cart', 'woocommerce' );
 		}
 	}

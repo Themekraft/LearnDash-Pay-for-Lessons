@@ -88,15 +88,20 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 			wp_send_json_error( array( 'message' => 'bad nonce' ), 403 );
 		}
 
-		$courses_raw = isset( $_REQUEST['courses'] ) ? wp_unslash( $_REQUEST['courses'] ) : array();
-		if ( ! is_array( $courses_raw ) ) {
-			$courses_raw = array_filter( array_map( 'trim', explode( ',', (string) $courses_raw ) ) );
+		$courses_raw = array();
+		if ( isset( $_REQUEST['courses'] ) ) {
+			$courses_raw = wp_unslash( $_REQUEST['courses'] );
+			if ( ! is_array( $courses_raw ) ) {
+				$courses_raw = array_filter( array_map( 'trim', explode( ',', (string) $courses_raw ) ) );
+			}
+			$courses_raw = array_map( 'sanitize_text_field', $courses_raw );
 		}
 		$courses = array_map( 'absint', $courses_raw );
 
 		$product_id = isset( $_REQUEST['productID'] ) ? absint( wp_unslash( $_REQUEST['productID'] ) ) : 0;
 
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- looking up lessons by course_id is intentional; called from a bounded admin AJAX request gated on edit_products + nonce.
+		// The meta_key + meta_query lookup against `course_id` is the only way to find lessons attached to a course; the endpoint is gated on `edit_products` + nonce, so the unbounded-query risk is bounded.
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		$args = array(
 			'posts_per_page' => -1,
 			'post_type'      => 'sfwd-lessons',
@@ -110,6 +115,7 @@ if ( in_array('woocommerce/woocommerce.php', apply_filters( 'active_plugins', ge
 				),
 			),
 		);
+		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 
 		$lesson_idss = array();
 		if ( $product_id ) {
